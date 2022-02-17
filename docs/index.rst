@@ -11,6 +11,7 @@ From here, you can navigate to:
    :caption: Contents:
 
    data_ingestion
+   data_versioning
    data_validation
    feature_engineering
    feature_store
