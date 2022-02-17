@@ -1,6 +1,29 @@
+*.pyc
+__pycache__/
+.pytest_cache/
+.mypy_cache/
 *cache*
-.mypy_cache/*
-.pytest_cache/*
-__pycache__/*
 
-venv/*
+.vscode
+
+.coverage
+
+.DS_Store
+
+.venv/
+venv/
+
+docs/_build/
+
+.env
+*/.env
+
+# core dump
+*/core.*
+
+.python-version
+
+.idea
+
+temp/
+great_expectations/
