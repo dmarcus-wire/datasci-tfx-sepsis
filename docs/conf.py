@@ -31,8 +31,7 @@ author = 'Red Hat NAPS DA'
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.napoleon',
               'sphinx.ext.viewcode',
-              'recommonmark',
-              'sphinxcontrib.mermaid'
+              'recommonmark'
 ]
 
 from recommonmark.parser import CommonMarkParser
