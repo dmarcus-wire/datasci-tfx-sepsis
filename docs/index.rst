@@ -1,19 +1,25 @@
-.. mlops-prototype documentation master file, created by
-   sphinx-quickstart.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+MLOps Prototype
+===============
 
-mlops-prototype documentation!
-==============================================
+Navigation
+----------
 
-Contents:
+From here, you can navigate to:
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
-   getting-started
-   commands
-
+   data_ingestion
+   data_versioning
+   data_validation
+   feature_engineering
+   feature_store
+   model_training
+   model_validation
+   infrastructure_validation
+   model_serving
+   log_monitor_alert
 
 
 Indices and tables
@@ -22,3 +28,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
