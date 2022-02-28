@@ -1,4 +1,4 @@
-patient_id,record_date,record_time,HR,O2Sat,Temp,SBP,MAP,DBP,Resp,EtCO2,isSepsis
+.patient_id,record_date,record_time,HR,O2Sat,Temp,SBP,MAP,DBP,Resp,EtCO2,isSepsis
 1,,,63,90,40.3,NaN,NaN,NaN,17,NaN,0
 2,,,79,95,39.2,143,77,47,13,NaN,0
 3,,,87,94,40.3,133,74,48,20,NaN,0
