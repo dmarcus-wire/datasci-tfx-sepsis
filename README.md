@@ -48,3 +48,15 @@ Machine Learning Prototype
     │       └── visualize.py
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+
+## Uninstallation
+
+Option: delete ALL resources labeled with "opendatahub" clusterwide
+`oc delete all --selector opendatahub.io/component=true --all-namespaces`
+`oc delete operatorgroup -n openshift-operators opendatahub`
+
+Option: delete ONLY the project
+`oc delete project <project-name>`
+
+Option: delete ONLY the kfdef in the project requires the file path
+`oc delete -f <path>/kfdef`
