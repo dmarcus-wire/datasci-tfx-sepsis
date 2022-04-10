@@ -11,7 +11,7 @@ oc project airflow
 helm repo add apache-airflow https://airflow.apache.org && helm repo update
 
 # Update policy for anyuid
-# https://examples.openshift.pub/deploy/scc-anyuid/ 
+https://examples.openshift.pub/deploy/scc-anyuid/ 
 '''
 oc adm policy add-scc-to-user -n airflow -z airflow-flower anyuid &&
 oc adm policy add-scc-to-user -n airflow -z airflow-scheduler anyuid &&
