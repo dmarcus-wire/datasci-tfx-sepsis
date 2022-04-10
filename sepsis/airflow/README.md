@@ -1,3 +1,6 @@
+# Follow Dwhite project
+https://github.com/davwhite/airflow-helm
+
 # Deploy Airflow on OpenShift
 oc new-project airflow
 
@@ -56,8 +59,13 @@ oc scale deployment/airflow-webserver --replicas=1
 'oc port-forward svc/airflow-webserver 8080:8080'
 
 # Permanently expose routes
-oc expose svc/airflow-webserver
-oc patch route/airflow-webserver --patch '{"spec":{"tls": {"termination": "edge", "insecureEdgeTerminationPolicy": "Redirect"}}}'
+oc expose svc/airflow-webserver && oc patch route/airflow-webserver --patch '{"spec":{"tls": {"termination": "edge", "insecureEdgeTerminationPolicy": "Redirect"}}}'
+
+# Errors
+'''
+Readiness probe failed: % Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0curl: (7) Failed to connect to localhost port 5555: Connection refused
+Error creating: pods "airflow-run-airflow-migrations--1-" is forbidden: unable to validate against any security context constraint: [provider "anyuid": Forbidden: not usable by user or serviceaccount, provider restricted: .spec.securityContext.fsGroup: Invalid value: []int64{1000770000}: 1000770000 is not an allowed group, spec.containers[0].securityContext.runAsUser: Invalid value: 1000770000: must be in the ranges: [1000660000, 1000669999], provider "nonroot": Forbidden: not usable by user or serviceaccount, provider "hostmount-anyuid": Forbidden: not usable by user or serviceaccount, provider "machine-api-termination-handler": Forbidden: not usable by user or serviceaccount, provider "hostnetwork": Forbidden: not usable by user or serviceaccount, provider "hostaccess": Forbidden: not usable by user or serviceaccount, provider "node-exporter": Forbidden: not usable by user or serviceaccount, provider "privileged": Forbidden: not usable by user or serviceaccount]
+'''
 
 # References
 - https://dsri.maastrichtuniversity.nl/docs/workflows-airflow/
