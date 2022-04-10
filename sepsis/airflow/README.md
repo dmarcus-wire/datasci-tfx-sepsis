@@ -26,28 +26,31 @@ Error creating: pods "airflow-triggerer-b49cd5f8f-" is forbidden: unable to vali
 
 # Update policy for anyuid
 # https://examples.openshift.pub/deploy/scc-anyuid/ 
-'oc adm policy add-scc-to-user -n airflow -z airflow-flower anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-scheduler anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-statsd anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-triggerer anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-webserver anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-worker anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-run-airflow-migrations anyuid'
-'oc adm policy add-scc-to-user -n airflow -z airflow-postresql anyuid'
+'''
+oc adm policy add-scc-to-user -n airflow -z airflow-flower anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-scheduler anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-statsd anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-triggerer anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-webserver anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-worker anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-run-airflow-migrations anyuid &&
+oc adm policy add-scc-to-user -n airflow -z airflow-postresql anyuid &&
 oc adm policy add-scc-to-user -n airflow -z airflow-anyuid anyuid
-
+'''
 
 ## Manually scale the pods
-oc scale deployment/airflow-flower --replicas=0
-oc scale deployment/airflow-flower --replicas=1
-oc scale deployment/airflow-scheduler --replicas=0
-oc scale deployment/airflow-scheduler --replicas=1
-oc scale deployment/airflow-statsd --replicas=0
-oc scale deployment/airflow-statsd --replicas=1
-oc scale deployment/airflow-triggerer --replicas=0
-oc scale deployment/airflow-triggerer --replicas=1
-oc scale deployment/airflow-webserver --replicas=0
+'''
+oc scale deployment/airflow-flower --replicas=0 && 
+oc scale deployment/airflow-flower --replicas=1 &&
+oc scale deployment/airflow-scheduler --replicas=0 &&
+oc scale deployment/airflow-scheduler --replicas=1 &&
+oc scale deployment/airflow-statsd --replicas=0 &&
+oc scale deployment/airflow-statsd --replicas=1 &&
+oc scale deployment/airflow-triggerer --replicas=0 &&
+oc scale deployment/airflow-triggerer --replicas=1 &&
+oc scale deployment/airflow-webserver --replicas=0 &&
 oc scale deployment/airflow-webserver --replicas=1
+'''
 
 # Port-forward for Airflow webserver
 'oc port-forward svc/airflow-webserver 8080:8080'
@@ -55,3 +58,7 @@ oc scale deployment/airflow-webserver --replicas=1
 # Permanently expose routes
 oc expose svc/airflow-webserver
 oc patch route/airflow-webserver --patch '{"spec":{"tls": {"termination": "edge", "insecureEdgeTerminationPolicy": "Redirect"}}}'
+
+# References
+- https://dsri.maastrichtuniversity.nl/docs/workflows-airflow/
+- https://github.com/MaastrichtU-IDS/dsri-documentation/blob/master/applications/airflow/values.yml
