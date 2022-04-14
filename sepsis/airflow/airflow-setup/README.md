@@ -1,6 +1,6 @@
 # Airflow setup procedure for OpenShift
 
-'''
+```
 # git clone project
 git clone https://github.com/redhat-na-ssa/mlops-prototype.git
 
@@ -34,7 +34,7 @@ cd && airflow && helm upgrade --install airflow ./ --namespace airflow \
 --set dags.gitSync.repo=https://github.com/redhat-na-ssa/mlops-prototype.git \
 --set dags.gitSync.branch=main \
 --set dags.gitSync.subPath=sepsis/airflow/workflows/dags
-'''
+```
 
 # References
 Steps originate from https://github.com/davwhite/airflow-helm and https://dsri.maastrichtuniversity.nl/docs/workflows-airflow/
