@@ -1,11 +1,14 @@
 
-NUMERICAL_FEATURES = ['HR','Temp','MAP','Resp']
+# dropped MAP need to handle NaN
+NUMERICAL_FEATURES = ['HR','Temp','Resp', 'isSepsis']
 
 # Number of buckets used by tf.transform for encoding each feature.
 FEATURE_BUCKET_COUNT = 10
 
 # Keys
 LABEL_KEY = 'isSepsis'
+
+print(LABEL_KEY)
 
 def t_name(key):
   """

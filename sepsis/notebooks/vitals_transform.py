@@ -2,7 +2,7 @@
 import tensorflow as tf
 import tensorflow_transform as tft
 
-# Imported files such as sepsis_constants are normally cached, so changes are
+# Imported files such as vitals_constants are normally cached, so changes are
 # not honored after the first import.  Normally this is good for efficiency, but
 # during development when we may be iterating code it can be a problem. To
 # avoid this problem during development, reload the file.
@@ -46,18 +46,17 @@ def preprocessing_fn(inputs):
   outputs = {}
   for key in _NUMERICAL_FEATURES:
     # If sparse make it dense, setting nan's to 0 or '', and apply zscore.
-    outputs[sepsis_constants.t_name(key)] = tft.scale_to_z_score(
+    outputs[vitals_constants.t_name(key)] = tft.scale_to_z_score(
         _fill_in_missing(inputs[key]), name=key)
 
-  # Was this passenger a big tipper?
-  # sepsis_fare = _fill_in_missing(inputs[_FARE_KEY])
-  # tips = _fill_in_missing(inputs[_LABEL_KEY])
-  outputs[_LABEL_KEY] = _fill_in_missing(inputs[_LABEL_KEY])
-  # outputs[_LABEL_KEY] = tf.where(
-  #    tf.math.is_nan(sepsis_fare),
-  #    tf.cast(tf.zeros_like(sepsis_fare), tf.int64),
-  #    # Test if the tip was > 20% of the fare.
-  #    tf.cast(
-  #        tf.greater(tips, tf.multiply(sepsis_fare, tf.constant(0.2))), tf.int64))
-
+  # Was this patient septic?
+  vitals_septic = _fill_in_missing(inputs[_LABEL_KEY])
+  """
+  outputs[_LABEL_KEY] = tf.where(
+      tf.math.is_nan(vitals_septic),
+      tf.cast(tf.zeros_like(vitals_septic), tf.int64),
+  #    # Test if the patient is septic == 1
+      tf.cast(
+          tf.greater(vitals_septic, tf.constant(0), tf.int64)
+  """
   return outputs
