@@ -19,15 +19,12 @@ from tensorflow_transform import TFTransformOutput
 # avoid this problem during development, reload the file.
 import vitals_constants
 import sys
-#if 'google.colab' in sys.modules:  # Testing to see if we're doing development
 import importlib
 importlib.reload(vitals_constants)
 
 _LABEL_KEY = vitals_constants.LABEL_KEY
 
 _BATCH_SIZE = 40
-
-print(_LABEL_KEY)
 
 
 def _input_fn(file_pattern: List[Text],
@@ -50,8 +47,7 @@ def _input_fn(file_pattern: List[Text],
   return data_accessor.tf_dataset_factory(
       file_pattern,
       tfxio.TensorFlowDatasetOptions(
-          batch_size=batch_size, label_key=_LABEL_KEY
-      ),
+          batch_size=batch_size, label_key=_LABEL_KEY),
       tf_transform_output.transformed_metadata.schema)
 
 def _get_tf_examples_serving_signature(model, tf_transform_output):
@@ -124,7 +120,7 @@ def export_serving_model(tf_transform_output, model, output_dir):
 
 def _build_keras_model(tf_transform_output: TFTransformOutput
                        ) -> tf.keras.Model:
-  """Creates a DNN Keras model for classifying sepsis data.
+  """Creates a DNN Keras model for classifying vitals data.
 
   Args:
     tf_transform_output: [TFTransformOutput], the outputs from Transform
@@ -147,7 +143,7 @@ def _build_keras_model(tf_transform_output: TFTransformOutput
           shape=spec.shape or [1], name=key, dtype=spec.dtype)
     else:
       raise ValueError('Spec type is not supported: ', key, spec)
-
+  
   output = tf.keras.layers.Concatenate()(tf.nest.flatten(inputs))
   output = tf.keras.layers.Dense(100, activation='relu')(output)
   output = tf.keras.layers.Dense(70, activation='relu')(output)

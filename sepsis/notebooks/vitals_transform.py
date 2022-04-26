@@ -8,7 +8,6 @@ import tensorflow_transform as tft
 # avoid this problem during development, reload the file.
 import vitals_constants
 import sys
-#if 'google.colab' in sys.modules:  # Testing to see if we're doing development
 import importlib
 importlib.reload(vitals_constants)
 
@@ -49,14 +48,6 @@ def preprocessing_fn(inputs):
     outputs[vitals_constants.t_name(key)] = tft.scale_to_z_score(
         _fill_in_missing(inputs[key]), name=key)
 
-  # Was this patient septic?
-  vitals_septic = _fill_in_missing(inputs[_LABEL_KEY])
-  """
-  outputs[_LABEL_KEY] = tf.where(
-      tf.math.is_nan(vitals_septic),
-      tf.cast(tf.zeros_like(vitals_septic), tf.int64),
-  #    # Test if the patient is septic == 1
-      tf.cast(
-          tf.greater(vitals_septic, tf.constant(0), tf.int64)
-  """
+  outputs[_LABEL_KEY] = _fill_in_missing(inputs[_LABEL_KEY]) 
+    
   return outputs
