@@ -33,12 +33,19 @@ cd airflow && helm upgrade --install airflow ./ --namespace airflow \
 --values ./values.yaml \
 --set dags.gitSync.repo=https://github.com/redhat-na-ssa/mlops-prototype.git \
 --set dags.gitSync.branch=main \
---set dags.gitSync.subPath=sepsis/pipeline
+--set dags.gitSync.subPath=sepsis/airflow/dags
 
-# create a route
+# create a route #1
 # name airflow-webserver
 # service airflow-webserver
 # target port 8080-8080 TCP
+# TLS termination Edge
+# Insecure Traffic Redirect
+
+# create a route #1
+# name airflow-flower
+# service airflow-flower
+# target port 5555-5555 
 # TLS termination Edge
 # Insecure Traffic Redirect
 ```
