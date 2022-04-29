@@ -29,11 +29,11 @@ cp airflow-values.yaml airflow/values.yaml
 cp charts-postgresql-values.yaml airflow/charts/postgresql/values.yaml
 
 # move into the airflow folder and install the helm chart specifying a path to the stored/to-be-stored DAGs
-cd airflow && helm upgrade --install airflow ./ --namespace airflow \
+helm upgrade --install airflow ./ --namespace airflow \
 --values ./values.yaml \
 --set dags.gitSync.repo=https://github.com/redhat-na-ssa/mlops-prototype.git \
 --set dags.gitSync.branch=main \
---set dags.gitSync.subPath=sepsis/airflow/dags
+--set dags.gitSync.subPath=airflow/workflows/dags
 
 # create a route #1
 # name airflow-webserver
