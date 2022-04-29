@@ -1,5 +1,6 @@
-apache-airflow[kubernetes,core]
+apache-airflow[kubernetes]
 pandas
+numpy
 tensorflow
 tensorflow-hub
 tensorflow-io-gcs-filesystem
