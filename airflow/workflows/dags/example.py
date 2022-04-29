@@ -23,7 +23,7 @@ dag = DAG(
 start = DummyOperator(task_id='run_this_first', dag=dag)
 
 passing = KubernetesPodOperator(
-    namespace='sepsis-detection',
+    namespace='airflow',
     image="python:3.6",
     cmds=["python","-c"],
     arguments=["print('hello world')"],
