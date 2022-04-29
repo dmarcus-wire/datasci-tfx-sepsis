@@ -154,8 +154,8 @@ mccabe==0.6.1
 micropipenv==1.0.4
 minio==6.0.2
 mistune==0.8.4
-ml-metadata==1.7.0
-ml-pipelines-sdk==1.7.1
+ml-metadata
+ml-pipelines-sdk
 mock==4.0.3
 mod-wsgi==4.6.8
 multidict==5.1.0
