@@ -1,3 +1,8 @@
 #!/bin/bash
 
 echo "Usage: insert here"
+echo ""
+echo "This container does nothing by default."
+echo "Ponder the universe with infinate sleep..."
+
+sleep infinity
