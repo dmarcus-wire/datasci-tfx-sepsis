@@ -171,6 +171,11 @@ cython_debug/
 # core dump
 */core.*
 
+temp/
+great_expectations/
+
+
+airflow/airflow-setup/*
 # scratch folder for testing
 scratch/
 dump/

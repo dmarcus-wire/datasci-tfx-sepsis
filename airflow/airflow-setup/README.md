@@ -4,11 +4,11 @@
 # git clone project
 git clone https://github.com/redhat-na-ssa/mlops-prototype.git
 
-# login to OpenShift cluster via CLI
+# login to OpenShift cluster via CLI with admin permissions
 oc login <token>
 
 # create a namespace using the create-namespace.yml file
-oc create -f create-namespace.yml
+oc create -f create-namespace.yaml
 
 # enter new 'airflow' project
 oc project airflow
@@ -19,7 +19,7 @@ helm repo add apache-airflow https://airflow.apache.org
 # get the airflow chart
 helm pull apache-airflow/airflow
 
-# unpack the tar file 
+# unpack the tar file
 tar xzf airflow-<version>.tgz
 
 # copy the airflow-values.yaml file over the airflow/values.yaml file
@@ -29,7 +29,7 @@ cp airflow-values.yaml airflow/values.yaml
 cp charts-postgresql-values.yaml airflow/charts/postgresql/values.yaml
 
 # move into the airflow folder and install the helm chart specifying a path to the stored/to-be-stored DAGs
-helm upgrade --install airflow ./ --namespace airflow \
+cd airflow && helm upgrade --install airflow ./ --namespace airflow \
 --values ./values.yaml \
 --set dags.gitSync.repo=https://github.com/redhat-na-ssa/mlops-prototype.git \
 --set dags.gitSync.branch=main \
@@ -42,12 +42,24 @@ helm upgrade --install airflow ./ --namespace airflow \
 # TLS termination Edge
 # Insecure Traffic Redirect
 
+oc expose svc/airflow-webserver
+
+oc create route edge \
+  --service=airflow-webserver \
+  --insecure-policy=Redirect \
+  --port=8080
+
 # create a route #1
 # name airflow-flower
 # service airflow-flower
-# target port 5555-5555 
+# target port 5555-5555
 # TLS termination Edge
 # Insecure Traffic Redirect
+
+oc create route edge \
+  --service=airflow-flower \
+  --insecure-policy=Redirect \
+  --port=5555
 ```
 
 # References
