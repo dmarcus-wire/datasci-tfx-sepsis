@@ -1,6 +1,5 @@
 absl-py==1.0.0
 aiohttp==3.7.4.post0
-apache-airflow
 alembic==1.6.5
 ansiwrap==0.8.4
 anyio==2.2.0
