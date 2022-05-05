@@ -27,3 +27,6 @@ docs/_build/
 
 temp/
 great_expectations/
+
+
+airflow/airflow-setup/*
