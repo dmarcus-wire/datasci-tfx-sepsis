@@ -65,7 +65,7 @@ _metadata_path = os.path.join(_tfx_root, 'metadata', _pipeline_name,
 
 # Pipeline arguments for Beam powered Components.
 _beam_pipeline_args = [
-    '--direct_running_mode=multi_processing',
+    #'--direct_running_mode=multi_processing',
     # 0 means auto-detect based on on the number of CPUs available
     # during execution time.
     '--direct_num_workers=0',
