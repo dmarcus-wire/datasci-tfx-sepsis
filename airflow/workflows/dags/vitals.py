@@ -32,8 +32,8 @@ from tfx.dsl.components.common import resolver
 from tfx.dsl.experimental import latest_blessed_model_resolver
 from tfx.orchestration import metadata
 from tfx.orchestration import pipeline
-from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
-from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
+#from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
+#from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
 from tfx.proto import pusher_pb2
 from tfx.proto import trainer_pb2
 from tfx.types import Channel
