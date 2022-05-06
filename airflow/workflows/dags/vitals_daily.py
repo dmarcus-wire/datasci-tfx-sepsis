@@ -25,7 +25,7 @@ start = DummyOperator(task_id='run_this_first', dag=dag)
 passing = KubernetesPodOperator(
     namespace='airflow',
     image="image-registry.openshift-image-registry.svc:5000/airflow/dag-runner:latest",
-    cmds=["python","airflow/workflows/dags/vitals.py"],
+    cmds=["python","sepsis/vitals.py"],
     labels={"app": "airflow"},
     name="passing-test",
     task_id="passing-task",
