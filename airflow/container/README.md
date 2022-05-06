@@ -3,15 +3,15 @@
 We are using the s2i base image and process to build a
 base image that will have the requirements needed for the dag to run.
 
-Base Image: python-3.7-ubi7:latest
+Base Image: python-3.8-ubi8:latest
 
 ## Quickstart
 ```
 # build dag image
 oc new-build \
-  https://github.com/redhat-na-ssa/mlops-prototype#airflow-container \
+  https://github.com/redhat-na-ssa/mlops-prototype \
   --name=dag-runner \
-  --image-stream=openshift/python:3.7-ubi7 \
+  --image-stream=openshift/python:3.8-ubi8 \
   --context-dir=airflow/container
 ```
 
