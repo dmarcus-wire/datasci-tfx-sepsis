@@ -33,8 +33,6 @@ from tfx.dsl.experimental import latest_blessed_model_resolver
 from tfx.orchestration import metadata
 from tfx.orchestration import pipeline
 from tfx.v1.orchestration import LocalDagRunner
-#from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
-#from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
 from tfx.proto import pusher_pb2
 from tfx.proto import trainer_pb2
 from tfx.types import Channel
@@ -70,12 +68,6 @@ _beam_pipeline_args = [
     # during execution time.
     '--direct_num_workers=0',
 ]
-
-# Airflow-specific configs; these will be passed directly to airflow
-_airflow_config = {
-    'schedule_interval': None,
-    'start_date': datetime.datetime(2019, 1, 1),
-}
 
 
 # TODO(b/137289334): rename this as simple after DAG visualization is done.
@@ -212,14 +204,3 @@ if __name__ == '__main__':
         serving_model_dir=_serving_model_dir,
         metadata_path=_metadata_path,
         beam_pipeline_args=_beam_pipeline_args))
-
-# 'DAG' below need to be kept for Airflow to detect dag.
-#DAG = AirflowDagRunner(AirflowPipelineConfig(_airflow_config)).run(
-#    _create_pipeline(
-#        pipeline_name=_pipeline_name,
-#        pipeline_root=_pipeline_root,
-#        data_root=_data_root,
-#        module_file=_module_file,
-#        serving_model_dir=_serving_model_dir,
-#        metadata_path=_metadata_path,
-#        beam_pipeline_args=_beam_pipeline_args))
