@@ -1,7 +1,6 @@
 from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
 
 default_args = {
     'owner': 'airflow',
@@ -20,12 +19,10 @@ dag = DAG(
     # schedule_interval=timedelta(minutes=10)
 )
 
-start = DummyOperator(task_id='run_this_first', dag=dag)
-
 passing = KubernetesPodOperator(
     namespace='airflow',
     image="image-registry.openshift-image-registry.svc:5000/airflow/dag-runner:latest",
-    cmds=["python","airflow/workflows/dags/vitals.py"],
+    cmds=["python","sepsis/vitals.py"],
     labels={"app": "airflow"},
     name="passing-test",
     task_id="passing-task",
@@ -34,4 +31,4 @@ passing = KubernetesPodOperator(
     dag=dag
 )
 
-passing.set_upstream(start)
+passing

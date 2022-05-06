@@ -32,8 +32,7 @@ from tfx.dsl.components.common import resolver
 from tfx.dsl.experimental import latest_blessed_model_resolver
 from tfx.orchestration import metadata
 from tfx.orchestration import pipeline
-from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
-from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
+from tfx.v1.orchestration import LocalDagRunner
 from tfx.proto import pusher_pb2
 from tfx.proto import trainer_pb2
 from tfx.types import Channel
@@ -44,19 +43,19 @@ _pipeline_name = 'vitals_solution'
 
 # This example assumes that the taxi data is stored in ~/taxi/data and the
 # taxi utility function is in ~/taxi.  Feel free to customize this as needed.
-_taxi_root = os.path.join(os.environ['HOME'], 'airflow')
-_data_root = os.path.join(_taxi_root, 'data', 'taxi_data')
+_vitals_root = os.path.join(os.environ['HOME'])
+_data_root = os.path.join(_vitals_root, 'data', 'raw')
 # Python module file to inject customized logic into the TFX components. The
 # Transform and Trainer both require user-defined functions to run successfully.
-_module_file = os.path.join(_taxi_root, 'dags', 'taxi_utils_solution.py')
+_module_file = os.path.join(_vitals_root, 'sepsis', 'vitals_utils.py')
 # Path which can be listened to by the model server.  Pusher will output the
 # trained model here.
-_serving_model_dir = os.path.join(_taxi_root, 'serving_model', _pipeline_name)
+_serving_model_dir = os.path.join(_vitals_root, 'serving_model', _pipeline_name)
 
 # Directory and data locations.  This example assumes all of the chicago taxi
 # example code and metadata library is relative to $HOME, but you can store
 # these files anywhere on your local filesystem.
-_tfx_root = os.path.join(_taxi_root, 'tfx')
+_tfx_root = os.path.join(_vitals_root, 'tfx')
 _pipeline_root = os.path.join(_tfx_root, 'pipelines', _pipeline_name)
 # Sqlite ML-metadata db path.
 _metadata_path = os.path.join(_tfx_root, 'metadata', _pipeline_name,
@@ -64,17 +63,11 @@ _metadata_path = os.path.join(_tfx_root, 'metadata', _pipeline_name,
 
 # Pipeline arguments for Beam powered Components.
 _beam_pipeline_args = [
-    '--direct_running_mode=multi_processing',
+    #'--direct_running_mode=multi_processing',
     # 0 means auto-detect based on on the number of CPUs available
     # during execution time.
     '--direct_num_workers=0',
 ]
-
-# Airflow-specific configs; these will be passed directly to airflow
-_airflow_config = {
-    'schedule_interval': None,
-    'start_date': datetime.datetime(2019, 1, 1),
-}
 
 
 # TODO(b/137289334): rename this as simple after DAG visualization is done.
@@ -125,20 +118,47 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
   # Uses TFMA to compute a evaluation statistics over features of a model and
   # perform quality validation of a candidate model (compared to a baseline).
   eval_config = tfma.EvalConfig(
-      model_specs=[tfma.ModelSpec(label_key='tips')],
-      slicing_specs=[tfma.SlicingSpec()],
-      metrics_specs=[
-          tfma.MetricsSpec(metrics=[
-              tfma.MetricConfig(
-                  class_name='BinaryAccuracy',
+    model_specs=[
+        # This assumes a serving model with signature 'serving_default'. If
+        # using estimator based EvalSavedModel, add signature_name: 'eval' and
+        # remove the label_key.
+        tfma.ModelSpec(
+            signature_name='serving_default',
+            label_key='isSepsis',
+            preprocessing_function_names=['transform_features'],
+            )
+        ],
+    metrics_specs=[
+        tfma.MetricsSpec(
+            # The metrics added here are in addition to those saved with the
+            # model (assuming either a keras model or EvalSavedModel is used).
+            # Any metrics added into the saved model (for example using
+            # model.compile(..., metrics=[...]), etc) will be computed
+            # automatically.
+            # To add validation thresholds for metrics saved with the model,
+            # add them keyed by metric name to the thresholds map.
+            metrics=[
+                tfma.MetricConfig(class_name='ExampleCount'),
+                tfma.MetricConfig(class_name='BinaryAccuracy',
                   threshold=tfma.MetricThreshold(
                       value_threshold=tfma.GenericValueThreshold(
-                          lower_bound={'value': 0.6}),
+                          lower_bound={'value': 0.5}),
+                      # Change threshold will be ignored if there is no
+                      # baseline model resolved from MLMD (first run).
                       change_threshold=tfma.GenericChangeThreshold(
                           direction=tfma.MetricDirection.HIGHER_IS_BETTER,
                           absolute={'value': -1e-10})))
-          ])
-      ])
+            ]
+        )
+    ],
+    slicing_specs=[
+        # An empty slice spec means the overall slice, i.e. the whole dataset.
+        tfma.SlicingSpec(),
+        # Data can be sliced along a feature column. In this case, data is
+        # sliced along feature column HR.
+        tfma.SlicingSpec(
+            feature_keys=['HR'])
+    ])
 
   model_analyzer = Evaluator(
       examples=example_gen.outputs['examples'],
@@ -175,14 +195,12 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
           metadata_path),
       beam_pipeline_args=beam_pipeline_args)
 
-
-# 'DAG' below need to be kept for Airflow to detect dag.
-#DAG = AirflowDagRunner(AirflowPipelineConfig(_airflow_config)).run(
-#    _create_pipeline(
-#        pipeline_name=_pipeline_name,
-#        pipeline_root=_pipeline_root,
-#        data_root=_data_root,
-#        module_file=_module_file,
-#        serving_model_dir=_serving_model_dir,
-#        metadata_path=_metadata_path,
-#        beam_pipeline_args=_beam_pipeline_args))
+if __name__ == '__main__':
+    LocalDagRunner().run(_create_pipeline(
+        pipeline_name=_pipeline_name,
+        pipeline_root=_pipeline_root,
+        data_root=_data_root,
+        module_file=_module_file,
+        serving_model_dir=_serving_model_dir,
+        metadata_path=_metadata_path,
+        beam_pipeline_args=_beam_pipeline_args))
