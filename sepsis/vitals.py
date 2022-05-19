@@ -17,6 +17,7 @@ import datetime
 import os
 from typing import List
 
+import tensorflow as tf
 import tensorflow_model_analysis as tfma
 from tfx.components import CsvExampleGen
 from tfx.components import Evaluator
@@ -39,12 +40,15 @@ from tfx.types import Channel
 from tfx.types.standard_artifacts import Model
 from tfx.types.standard_artifacts import ModelBlessing
 
+import boto3
+
 _pipeline_name = 'vitals_solution'
 
 # This example assumes that the taxi data is stored in ~/taxi/data and the
 # taxi utility function is in ~/taxi.  Feel free to customize this as needed.
+_data_raw = "pat_vitals_labeled-dataSepsis.csv"
 _vitals_root = os.path.join(os.environ['HOME'])
-_data_root = os.path.join(_vitals_root, 'data', 'raw')
+_data_root = os.path.join(_vitals_root)
 # Python module file to inject customized logic into the TFX components. The
 # Transform and Trainer both require user-defined functions to run successfully.
 _module_file = os.path.join(_vitals_root, 'sepsis', 'vitals_utils.py')
@@ -75,6 +79,14 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
                      module_file: str, serving_model_dir: str,
                      metadata_path: str,
                      beam_pipeline_args: List[str]) -> pipeline.Pipeline:
+
+    # configure boto S3 connection
+  s3 = boto3.client('s3',
+                    os.environ['S3_REGION'],
+                    aws_access_key_id = os.environ['S3_ACCESS_KEY_ID'],
+                    aws_secret_access_key = os.environ['S3_SECRET_ACCESS_KEY'])
+  s3.download_file(os.environ['S3_BUCKET'], "data/pat_vitals_labeled-dataSepsis.csv", _data_raw)
+
   """Implements the chicago taxi pipeline with TFX."""
   # Brings data into the pipeline or otherwise joins/converts training data.
   example_gen = CsvExampleGen(input_base=data_root)
@@ -175,6 +187,9 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
       push_destination=pusher_pb2.PushDestination(
           filesystem=pusher_pb2.PushDestination.Filesystem(
               base_directory=serving_model_dir)))
+
+  #push_uri = pusher.outputs['pushed_model'].get()[0].uri
+ #model = tf.saved_model.load(push_uri)
 
   return pipeline.Pipeline(
       pipeline_name=pipeline_name,
