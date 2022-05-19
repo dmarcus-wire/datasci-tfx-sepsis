@@ -2,15 +2,14 @@
 
 # Import libraries
 import pandas as pd
-import cloudpickle as cp
+import tensorflow as tf
 
 
 # Load your model.
-#pipeline = cp.load(open('pipeline.pkl', 'rb'))
-
+model = tf.saved_model.load('.')
 
 def predict(args_dict):
-
+   model.predict()
    # d = {'timestamp':0, 'label':0, 'user_id': args_dict.get('user_id'), 'amount': args_dict.get('amount'), 'merchant_id': args_dict.get('merchant_id'), 'trans_type': args_dict.get('trans_type'), 'foreign': args_dict.get('foreign'), 'interarrival': args_dict.get('interarrival')}
 
     #df = pd.DataFrame(d, index=[0])

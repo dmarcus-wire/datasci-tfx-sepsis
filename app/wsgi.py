@@ -9,8 +9,16 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from prometheus_client import make_wsgi_app
 import logging
 import time
+import boto3
 
 application = Flask(__name__)
+
+s3 = boto3.client('s3',
+                  os.environ['S3_REGION'],
+                  aws_access_key_id = os.environ['S3_ACCESS_KEY_ID'],
+                  aws_secret_access_key = os.environ['S3_SECRET_ACCESS_KEY'])
+
+s3.download_file(os.environ['S3_BUCKET'], "models/vitals_simple/1651022813/saved_model.pb", 'saved_model.pb')
 
 #
 # Define the Prometheus metrics.
@@ -36,7 +44,7 @@ def create_prediction():
         data = request.data or '{}'
         body = json.loads(data)
         p = predict(body)
-        
+
         #
         # Increment the prediction metric counts.
         #
@@ -46,7 +54,7 @@ def create_prediction():
                 fraud.inc()
 
         logging.debug(f'Prediction: {p["prediction"]}')
-        
+
         r = jsonify(p)
         return r
 
