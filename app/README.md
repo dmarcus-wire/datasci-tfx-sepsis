@@ -1,0 +1,1 @@
+oc new-app --image-stream=python:3.8-ubi8 --context-dir=/app --env=GUNICORN_CMD_ARGS="--bind=0.0.0.0:8080" https://github.com/redhat-na-ssa/mlops-prototype.git
