@@ -46,9 +46,9 @@ _pipeline_name = 'vitals_solution'
 
 # This example assumes that the taxi data is stored in ~/taxi/data and the
 # taxi utility function is in ~/taxi.  Feel free to customize this as needed.
-_data_raw = "pat_vitals_labeled-dataSepsis.csv"
+_data_raw = "data/pat_vitals_labeled-dataSepsis.csv"
 _vitals_root = os.path.join(os.environ['HOME'])
-_data_root = os.path.join(_vitals_root)
+_data_root = os.path.join(_vitals_root, 'data')
 # Python module file to inject customized logic into the TFX components. The
 # Transform and Trainer both require user-defined functions to run successfully.
 _module_file = os.path.join(_vitals_root, 'sepsis', 'vitals_utils.py')
@@ -187,9 +187,7 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
       push_destination=pusher_pb2.PushDestination(
           filesystem=pusher_pb2.PushDestination.Filesystem(
               base_directory=serving_model_dir)))
-
-  #push_uri = pusher.outputs['pushed_model'].get()[0].uri
- #model = tf.saved_model.load(push_uri)
+  s3.upload_file(Filename=trainer.outputs['model'].get()[0].uri + '/Format-Serving/saved_model.pb' , Bucket=os.environ['S3_BUCKET'], Key="models/saved_model.pb")
 
   return pipeline.Pipeline(
       pipeline_name=pipeline_name,
