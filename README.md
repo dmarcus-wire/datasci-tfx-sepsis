@@ -2,6 +2,10 @@
 
 Goal: Goal:  Demonstrate MLOps Lifecycle automation using the scenario of predicting patient at-risk of sepsis based on patient data
 
+“MLOps is a practice for collaboration and communication between data scientists and operations professionals to help manage production ML lifecycle.”
+
+“Similar to the DevOps or DataOps approaches, MLOps looks to increase automation and improve the quality of production ML while also focusing on business and regulatory requirements.”
+
 ![MLOps Demo Flow](docs/ds-mlops-demo-flow.png)
 
 **Phase 1: Train (baseline)**
@@ -49,3 +53,7 @@ oc delete project <project-name>
 # Option: delete ONLY the kfdef in the project requires the file path
 oc delete -f <path>/kfdef
 ```
+
+
+Resources
+- https://www.iteblog.com/ppt/dataai-summit-europe-2020/streaming-inference-with-apache-beam-and-tfx-iteblog.com.pdf
