@@ -6,22 +6,7 @@ Goal: Goal:  Demonstrate MLOps Lifecycle automation using the scenario of predic
 
 “Similar to the DevOps or DataOps approaches, MLOps looks to increase automation and improve the quality of production ML while also focusing on business and regulatory requirements.”
 
-![MLOps Demo Flow](docs/ds-mlops-demo-flow.png)
-
-**Phase 1: Train (baseline)**
-1. used Kaggle competition data as baseline
-2. data was completed regenerated for vitals prediction
-3. training pipeline created with TFX for baseline model and minimal features
-
-**Phase 2: Inference (baseline)**
-4. synthetically generate new patient data
-5. heuristics to i.d. septic conditions before model
-6. API request for model prediction
-7. notify human review of true and false predictions
-
-**Phase 3: Retrain (automate evolution)**
-8. log true and false output + patient data to generate fresh training data
-9. retrain model via pipeline using data from the wild
+![MLOps Demo Flow](./tfx-pipeline-on-openshift.png)
 
 
 ```
