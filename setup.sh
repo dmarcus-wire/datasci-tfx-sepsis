@@ -17,3 +17,7 @@ touch code/__init__.py
 # install requirements.txt packages
 printf "${GREEN}Install requirements.txt${NORMAL}\n\n"
 pip install -r requirements.txt
+
+# cleanup notebook checkpoint files that cause errors "RuntimeError: Files in same split /* have different header."
+printf "{GREEN}Cleanup notebook checkpoint files in data directories.${NORMAL}\n\n"
+rm -rf data/{new,raw}/.ipynb_checkpoints

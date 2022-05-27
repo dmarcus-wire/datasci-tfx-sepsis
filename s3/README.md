@@ -2,7 +2,8 @@
 
 1. Administrator Creates Secret via aws-s3-secret.yaml
 2. Administrator Creates StorageClass via the {greenfield or brownfield}-storageclass.yaml
-3. 
+3. User Creates ObjectBucketClaim with the {greenfield or brownfield}-objectbucketclaim.yaml
+4. User Creates / Update Pod
 
 ## Administrator Creates Secret with the aws-s3-creds.yaml
 
