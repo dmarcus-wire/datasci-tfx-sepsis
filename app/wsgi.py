@@ -1,24 +1,42 @@
 import json
-from pydoc import pager
-from flask import Flask, jsonify, request
-from prediction import predict
-from prometheus_client import Counter
-from prometheus_client import Gauge
-from prometheus_client import Histogram
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from prometheus_client import make_wsgi_app
 import logging
-import time
-import boto3
+import os
+
+from flask import (
+    Flask,
+    jsonify,
+    request
+)
+
+import tensorflow as tf
+
+from prometheus_client import (
+    Counter,
+    Histogram,
+    make_wsgi_app
+)
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+
+
+from s3_util import (
+    downloadDirectoryFromS3
+)
+
 
 application = Flask(__name__)
 
-s3 = boto3.client('s3',
-                  os.environ['S3_REGION'],
-                  aws_access_key_id = os.environ['S3_ACCESS_KEY_ID'],
-                  aws_secret_access_key = os.environ['S3_SECRET_ACCESS_KEY'])
+logging.info(f'Tensorflow version: {tf.__version__}')
+logging.info(f"S3_REGION: {os.environ['S3_REGION']}")
+logging.info(f"S3_ACCESS_KEY_ID: {os.environ['S3_ACCESS_KEY_ID']}")
+logging.info(f"S3_BUCKET: {os.environ['S3_BUCKET']}")
 
-s3.download_file(os.environ['S3_BUCKET'], "models/vitals_simple/1651022813/saved_model.pb", 'saved_model.pb')
+remote_folder = "models/vitals_simple/1651022813/"
+logging.info(f"Downloading s3://{os.environ['S3_BUCKET']}/{remote_folder}")
+downloadDirectoryFromS3(os.environ['S3_BUCKET'], remote_folder)
+
+# Load, print and make a prediction.
+loaded_model = tf.keras.models.load_model(remote_folder)
+
 
 #
 # Define the Prometheus metrics.
@@ -43,23 +61,23 @@ def create_prediction():
         c.inc()
         data = request.data or '{}'
         body = json.loads(data)
-        p = predict(body)
+        prediction = loaded_model((tf.constant(body['hr'], shape=(1,1)), tf.constant(body['resp'], shape=(1,1)), tf.constant(body['temp'], shape=(1,1)))).numpy()[0][0]
 
         #
         # Increment the prediction metric counts.
         #
-        if p["prediction"] == "legitimate":
-                legit.inc()
-        if p["prediction"] == "fraud":
-                fraud.inc()
+        if prediction == 1:
+            legit.inc()
+        else:
+            fraud.inc()
 
-        logging.debug(f'Prediction: {p["prediction"]}')
+        logging.debug(f'Prediction: {prediction}')
 
-        r = jsonify(p)
+        r = jsonify({'isSepsis': prediction})
         return r
 
-@application.errorhandler(404) 
-def invalid_route(e): 
+@application.errorhandler(404)
+def invalid_route(e):
     logging.info(f'errorCode : 404, message : Route not found')
     return jsonify({'errorCode' : 404, 'message' : 'Route not found'})
 
