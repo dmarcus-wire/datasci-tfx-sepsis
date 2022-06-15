@@ -10,4 +10,4 @@ Goal: Demonstrate MLOps Lifecycle automation using the scenario of predicting pa
 * [Apache Airflow](https://airflow.apache.org/)
 * [Open Data Hub](https://opendatahub.io/)
 
-![MLOps Demo Flow](docs/iamges/tfx-pipeline-on-openshift.png)
+![MLOps Demo Flow](docs/images/tfx-pipeline-on-openshift.png)
