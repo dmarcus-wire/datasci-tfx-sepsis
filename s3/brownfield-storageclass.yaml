@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: s3-existing-buckets
+provisioner: aws-s3.io/bucket
+parameters:
+  bucketName: my-existing-bucket
+  region: us-west-1
+  secretName: s3-bucket-owner
+  secretNamespace: s3-provisioner
