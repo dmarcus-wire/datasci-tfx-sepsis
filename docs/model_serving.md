@@ -14,6 +14,18 @@ curl -X POST -H "Content-Type: application/json" --data '{"hr":43.2, "resp": 32.
 
 [Source](https://www.redhat.com/en/topics/api/why-choose-red-hat-apis#:~:text=Red%20Hat%20gives%20your%20business,new%E2%80%94even%20as%20you%20grow)
 
+## Deploy API
+
+The source code to deploy the model through an API with Flask exists in the [app](https://github.com/redhat-na-ssa/mlops-prototype/tree/main/app) folder of the repository. The Flask app is built using S2I:
+
+"Source-to-Image (S2I) is a toolkit and workflow for building reproducible container images from source code. S2I produces ready-to-run images by injecting source code into a container image and letting the container prepare that source code for execution. By creating self-assembling builder images, you can version and control your build environments exactly like you use container images to version your runtime environments." ~[Source](https://github.com/openshift/source-to-image)
+
+To build the app manually, run:
+
+```bash
+oc new-app --image-stream=python:3.8-ubi8 --context-dir=/app --env=GUNICORN_CMD_ARGS="--bind=0.0.0.0:8080" https://github.com/redhat-na-ssa/mlops-prototype.git
+```
+
 ## Other Serving Options
 
 1. TFX `BulkInferrer` component
