@@ -26,12 +26,13 @@ passing = KubernetesPodOperator(
     cmds=["python","sepsis/vitals.py"],
     labels={"app": "airflow"},
     name="vitals-train",
-    task_id="passing-task",
+    task_id="vitals-train",
     get_logs=True,
     image_pull_policy='Always',
     dag=dag
 )
 
+# Example e-mail notification
 success_msg = EmailOperator(
     dag=dag,
     task_id='success_msg',
@@ -47,7 +48,4 @@ success_msg = EmailOperator(
     )
 )
 
-
-
-
-passing >> success_msg
+passing
