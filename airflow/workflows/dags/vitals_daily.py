@@ -1,6 +1,7 @@
 from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.email_operator import EmailOperator
 
 default_args = {
     'owner': 'airflow',
@@ -31,4 +32,22 @@ passing = KubernetesPodOperator(
     dag=dag
 )
 
-passing
+success_msg = EmailOperator(
+    dag=dag,
+    task_id='success_msg',
+    to=['nsayre@redhat.com'],
+    subject='[SUCCESS] -- vitals pipeline',
+    html_content=(
+        '''
+        <h3>&#127939; Run details:</h3>
+            <p><b>DAG:</b> vitals_daily
+            <p><b>Status:</b> &#9989; Success
+        <br></br>
+        '''
+    )
+)
+
+
+
+
+passing >> success_msg
