@@ -46,9 +46,9 @@ _pipeline_name = 'vitals_solution'
 
 # This example assumes that the taxi data is stored in ~/taxi/data and the
 # taxi utility function is in ~/taxi.  Feel free to customize this as needed.
-_data_raw = "data/pat_vitals_labeled-dataSepsis.csv"
+#_data_raw = "data/pat_vitals_labeled-dataSepsis.csv"
 _vitals_root = os.path.join(os.environ['HOME'])
-_data_root = os.path.join(_vitals_root, 'data')
+_data_root = os.path.join(_vitals_root, 'data', 'raw')
 # Python module file to inject customized logic into the TFX components. The
 # Transform and Trainer both require user-defined functions to run successfully.
 _module_file = os.path.join(_vitals_root, 'sepsis', 'vitals_utils.py')
@@ -81,11 +81,11 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
                      beam_pipeline_args: List[str]) -> pipeline.Pipeline:
 
     # configure boto S3 connection
-  s3 = boto3.client('s3',
-                    os.environ['S3_REGION'],
-                    aws_access_key_id = os.environ['S3_ACCESS_KEY_ID'],
-                    aws_secret_access_key = os.environ['S3_SECRET_ACCESS_KEY'])
-  s3.download_file(os.environ['S3_BUCKET'], "data/pat_vitals_labeled-dataSepsis.csv", _data_raw)
+ # s3 = boto3.client('s3',
+ #                   os.environ['S3_REGION'],
+ #                   aws_access_key_id = os.environ['S3_ACCESS_KEY_ID'],
+ #                   aws_secret_access_key = os.environ['S3_SECRET_ACCESS_KEY'])
+ # s3.download_file(os.environ['S3_BUCKET'], "data/pat_vitals_labeled-dataSepsis.csv", _data_raw)
 
   """Implements the chicago taxi pipeline with TFX."""
   # Brings data into the pipeline or otherwise joins/converts training data.
