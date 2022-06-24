@@ -187,7 +187,7 @@ def _create_pipeline(pipeline_name: str, pipeline_root: str, data_root: str,
       push_destination=pusher_pb2.PushDestination(
           filesystem=pusher_pb2.PushDestination.Filesystem(
               base_directory=serving_model_dir)))
-  s3.upload_file(Filename=trainer.outputs['model'].get()[0].uri + '/Format-Serving/saved_model.pb' , Bucket=os.environ['S3_BUCKET'], Key="models/saved_model.pb")
+  # s3.upload_file(Filename=trainer.outputs['model'].get()[0].uri + '/Format-Serving/saved_model.pb' , Bucket=os.environ['S3_BUCKET'], Key="models/saved_model.pb")
 
   return pipeline.Pipeline(
       pipeline_name=pipeline_name,
