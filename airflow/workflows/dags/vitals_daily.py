@@ -33,19 +33,19 @@ passing = KubernetesPodOperator(
 )
 
 # Example e-mail notification
-success_msg = EmailOperator(
-    dag=dag,
-    task_id='success_msg',
-    to=['nsayre@redhat.com'],
-    subject='[SUCCESS] -- vitals pipeline',
-    html_content=(
-        '''
-        <h3>&#127939; Run details:</h3>
-            <p><b>DAG:</b> vitals_daily
-            <p><b>Status:</b> &#9989; Success
-        <br></br>
-        '''
-    )
-)
+#success_msg = EmailOperator(
+#    dag=dag,
+#    task_id='success_msg',
+#    to=['nsayre@redhat.com'],
+#    subject='[SUCCESS] -- vitals pipeline',
+#    html_content=(
+#        '''
+#        <h3>&#127939; Run details:</h3>
+#            <p><b>DAG:</b> vitals_daily
+#            <p><b>Status:</b> &#9989; Success
+#        <br></br>
+#        '''
+#    )
+#)
 
 passing
