@@ -1,18 +1,13 @@
-from typing import Dict, List, Text
+from typing import List, Text
 
-import os
-import glob
 from absl import logging
 
-import datetime
 import tensorflow as tf
 import tensorflow_transform as tft
 
 from tfx import v1 as tfx
 from tfx_bsl.public import tfxio
 from tensorflow_transform import TFTransformOutput
-
-import sys
 
 _BATCH_SIZE = 40
 
@@ -163,9 +158,9 @@ def run_fn(fn_args: tfx.components.FnArgs):
   """
   tf_transform_output = tft.TFTransformOutput(fn_args.transform_output)
 
-  train_dataset = _input_fn(fn_args.train_files, fn_args.data_accessor, 
+  train_dataset = _input_fn(fn_args.train_files, fn_args.data_accessor,
                             tf_transform_output, _BATCH_SIZE)
-  eval_dataset = _input_fn(fn_args.eval_files, fn_args.data_accessor, 
+  eval_dataset = _input_fn(fn_args.eval_files, fn_args.data_accessor,
                            tf_transform_output, _BATCH_SIZE)
 
   model = _build_keras_model(tf_transform_output)
